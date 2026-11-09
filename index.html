@@ -7,8 +7,6 @@
 <meta name="theme-color" content="#171717">
 <title>Continera CB Radio</title>
 
-<link rel="manifest" href="manifest.json">
-
 <style>
 * {
     box-sizing: border-box;
@@ -21,495 +19,479 @@ body {
     color: white;
     font-family: Arial, sans-serif;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding: 25px 15px;
+    padding: 12px;
 }
 
-header {
+.app {
     width: 100%;
-    text-align: center;
-    margin-bottom: 45px;
+    max-width: 850px;
 }
 
-header h1 {
-    font-size: 25px;
-    letter-spacing: 3px;
-    margin: 0;
+.scene {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, #777d80 0%, #303639 35%, #171b1c 100%);
+    border-radius: 12px;
+    border: 2px solid #444;
+    transition: transform .25s;
 }
 
-header p {
-    color: #888;
-    font-size: 12px;
+/* Кабіна */
+.cabin {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg,
+        rgba(180,190,193,.35),
+        transparent 34%),
+        linear-gradient(90deg,
+        #303536 0%,
+        #62696b 45%,
+        #24292b 100%);
+}
+
+.windshield {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 55%;
+    background:
+        linear-gradient(180deg, #9caeb0, #566d70 65%, #303b3d);
+    clip-path: polygon(0 0,100% 0,100% 75%,0 100%);
+    opacity: .8;
+}
+
+.outside {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, transparent 25%, #697b6b 42%, #414d3f 52%, transparent 65%);
+    opacity: .65;
+}
+
+.roof {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 14%;
+    background: linear-gradient(#181a1b, #44494a);
+    border-bottom: 4px solid #252829;
+}
+
+.dash {
+    position: absolute;
+    bottom: -5%;
+    left: -5%;
+    width: 110%;
+    height: 28%;
+    background: linear-gradient(180deg,#282d2e,#101314);
+    border-top: 5px solid #555b5c;
+    border-radius: 50% 50% 0 0;
+}
+
+/* Кріплення рації */
+.mount {
+    position: absolute;
+    left: 24%;
+    top: 7%;
+    width: 53%;
+    height: 7%;
+    background: linear-gradient(#202425,#555b5c,#171a1b);
+    border: 2px solid #171a1b;
+    border-radius: 4px;
+    box-shadow: 0 5px 8px #0009;
+}
+
+/* Корпус */
+.radio {
+    position: absolute;
+    left: 24%;
+    top: 12%;
+    width: 53%;
+    height: 19%;
+    padding: 1.1%;
+    background: linear-gradient(135deg,#e4e5e4,#777c7d 40%,#c4c6c5 70%,#555a5b);
+    border: 2px solid #333;
+    border-radius: 7px;
+    box-shadow: 0 8px 12px #000b, inset 0 1px 2px white;
+}
+
+.radio-face {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(180deg,#25292a,#080a0b 55%,#202425);
+    border: 2px solid #111;
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px #000;
+}
+
+/* Гвинти */
+.screw {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle at 35% 30%,#eee,#777 60%,#333);
+    border: 1px solid #333;
+    border-radius: 50%;
+    z-index: 5;
+}
+.s1 {top:3px;left:3px}
+.s2 {top:3px;right:3px}
+.s3 {bottom:3px;left:3px}
+.s4 {bottom:3px;right:3px}
+
+/* Дисплей */
+.display {
+    position: absolute;
+    left: 25%;
+    top: 16%;
+    width: 50%;
+    height: 48%;
+    background: linear-gradient(180deg,#30180b,#100803);
+    border: 3px solid #77716b;
+    border-radius: 4px;
+    box-shadow: inset 0 0 9px #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5%;
+}
+
+.digits {
+    color: #ff9b35;
+    font-family: monospace;
+    font-size: clamp(16px,4vw,31px);
+    font-weight: bold;
+    text-shadow: 0 0 7px #ff6a00;
     letter-spacing: 2px;
 }
 
-/* РАЦІЯ ТА МІКРОФОН */
-
-.radio-stage {
-    width: 100%;
-    max-width: 390px;
-    height: 245px;
-    position: relative;
-    transition: transform 0.35s ease;
-}
-
-.radio-stage.open {
-    transform: scale(1.08);
-    margin-bottom: 25px;
-}
-
-/* КОРПУС РАЦІЇ */
-
-.radio-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: calc(100% - 42px);
-    transition: transform 0.35s ease;
-}
-
-.radio {
-    width: 100%;
-    background: linear-gradient(145deg, #444, #171717 35%, #292929);
-    border: 3px solid #777;
-    border-radius: 12px;
-    padding: 13px;
-    box-shadow:
-        0 8px 20px #000,
-        inset 0 1px 3px #aaa;
-    user-select: none;
-}
-
-.radio-top {
+.signal {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #ccc;
-    font-size: 10px;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
+    align-items: end;
+    gap: 2px;
+    height: 65%;
 }
 
+.signal i {
+    width: 4px;
+    background: #ff9b35;
+    box-shadow: 0 0 4px #ff6a00;
+}
+.signal i:nth-child(1){height:20%}
+.signal i:nth-child(2){height:35%}
+.signal i:nth-child(3){height:50%}
+.signal i:nth-child(4){height:70%}
+.signal i:nth-child(5){height:100%}
+
+/* Написи */
 .brand {
-    font-weight: bold;
-    font-size: 13px;
-    color: #eee;
+    position: absolute;
+    top: 4%;
+    left: 40%;
+    color: #d0d0d0;
+    font-size: clamp(5px,1.1vw,9px);
+    letter-spacing: 2px;
 }
 
-.radio-panel {
-    display: flex;
-    align-items: center;
-    gap: 9px;
+.channel {
+    position: absolute;
+    top: 69%;
+    left: 32%;
+    color: #aaa;
+    font-size: clamp(5px,1vw,8px);
 }
 
+/* Ручки */
 .knob {
-    width: 43px;
-    height: 43px;
-    flex-shrink: 0;
+    position: absolute;
+    top: 20%;
+    width: 16%;
+    aspect-ratio: 1;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #888, #292929 55%, #080808);
-    border: 3px solid #111;
-    box-shadow: 0 2px 5px #000;
-    position: relative;
+    background:
+        radial-gradient(circle at 35% 30%,#eee 0%,#a5a5a5 15%,#444 48%,#171717 70%,#777 78%,#222 100%);
+    border: 2px solid #aaa;
+    box-shadow: 0 2px 5px #000, inset 0 0 5px #000;
 }
 
 .knob::after {
     content: "";
     position: absolute;
+    left: 48%;
+    top: 8%;
     width: 3px;
-    height: 12px;
-    background: #ddd;
-    top: 3px;
-    left: 17px;
-    border-radius: 5px;
-}
-
-.display {
-    flex: 1;
-    min-width: 0;
-    height: 70px;
-    background: #171b13;
-    border: 4px solid #101010;
-    border-radius: 5px;
-    box-shadow: inset 0 0 12px #000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #ff9b32;
-    text-shadow: 0 0 8px #ff7b00;
-}
-
-.channel {
-    font-size: 34px;
-    font-family: monospace;
-    font-weight: bold;
-    line-height: 1;
-}
-
-.display-label {
-    font-size: 8px;
-    letter-spacing: 3px;
-    margin-top: 5px;
-}
-
-.radio-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 13px;
-}
-
-.radio-buttons {
-    display: flex;
-    gap: 6px;
-}
-
-.radio-button {
-    width: 24px;
-    height: 12px;
-    background: linear-gradient(#888, #333);
-    border: 1px solid #111;
+    height: 23%;
+    background: #eee;
     border-radius: 3px;
 }
 
-.radio-speaker {
-    width: 75px;
-    height: 22px;
-    background: repeating-linear-gradient(
-        0deg,
-        #111 0px,
-        #111 2px,
-        #555 3px,
-        #222 4px
-    );
-    border-radius: 4px;
-}
+.knob.left {left: 3%}
+.knob.right {right: 3%}
 
-.radio-footer {
-    text-align: center;
-    color: #aaa;
-    font-size: 8px;
-    letter-spacing: 3px;
-    margin-top: 12px;
-}
-
-/* ВИТИЙ КАБЕЛЬ */
-
-.mic-cable {
+.small-button {
     position: absolute;
-    z-index: 1;
-    left: 34px;
-    top: 83px;
-    width: 19px;
-    height: 125px;
-
-    background:
-        repeating-linear-gradient(
-            135deg,
-            transparent 0px,
-            transparent 4px,
-            #111 5px,
-            #777 7px,
-            #222 9px
-        );
-
-    border-left: 2px solid #111;
-    border-right: 2px solid #555;
-    border-radius: 10px;
-    transform: rotate(3deg);
+    top: 76%;
+    width: 5%;
+    height: 9%;
+    border-radius: 3px;
+    background: linear-gradient(#aaa,#333,#777);
+    border: 1px solid #111;
 }
+.b1{left:27%}
+.b2{left:36%}
+.b3{left:45%}
+.b4{left:54%}
+.b5{left:63%}
+.b6{left:72%}
 
-/* МІКРОФОН */
-
+/* Мікрофон */
 .microphone {
     position: absolute;
-    z-index: 5;
-    left: 0;
-    top: 65px;
-
-    width: 82px;
-    height: 155px;
-
-    border: 3px solid #555;
-    border-radius: 20px 20px 26px 26px;
-
-    background: linear-gradient(
-        110deg,
-        #444 0%,
-        #171717 35%,
-        #080808 70%,
-        #333 100%
-    );
-
-    box-shadow:
-        4px 7px 12px #000,
-        inset 1px 1px 4px #888;
-
+    left: 29%;
+    top: 34%;
+    width: 11%;
+    height: 26%;
+    border-radius: 12px 12px 16px 16px;
+    background: linear-gradient(90deg,#080909,#292d2e 45%,#090a0a);
+    border: 2px solid #090909;
+    box-shadow: 4px 6px 8px #0009;
+    transform: rotate(-7deg);
+    z-index: 4;
     cursor: pointer;
-    padding: 0;
-    transition: transform 0.2s ease;
-}
-
-.microphone:active {
-    transform: scale(0.95);
 }
 
 .mic-top {
-    width: 58px;
-    height: 15px;
-    margin: 5px auto 0;
-    background: linear-gradient(#555, #111);
-    border-radius: 10px 10px 3px 3px;
+    position: absolute;
+    top: 4%;
+    left: 15%;
+    width: 70%;
+    height: 28%;
+    border-radius: 8px;
+    background: linear-gradient(#777,#222 30%,#080808);
+    border: 1px solid #555;
 }
 
-.mic-speaker {
-    width: 48px;
-    height: 52px;
-    margin: 5px auto;
-    border-radius: 7px;
-
-    background:
-        radial-gradient(circle, #999 1px, transparent 1.5px);
-
-    background-size: 4px 4px;
-    background-color: #292929;
-
-    border: 2px solid #111;
-    box-shadow: inset 0 0 8px #000;
+.mic-grille {
+    position: absolute;
+    top: 9%;
+    left: 23%;
+    width: 54%;
+    height: 18%;
+    border-radius: 50%;
+    background: repeating-linear-gradient(
+        0deg,#080808 0px,#777 1px,#151515 2px
+    );
 }
 
 .mic-button {
-    width: 12px;
-    height: 30px;
-    background: linear-gradient(90deg, #888, #333, #777);
-    border: 2px solid #111;
-    border-radius: 5px;
-    margin: 4px auto;
-    box-shadow: 0 2px 3px #000;
+    position: absolute;
+    right: -3px;
+    top: 39%;
+    width: 7px;
+    height: 35%;
+    border-radius: 4px;
+    background: linear-gradient(90deg,#111,#777,#111);
 }
 
-.mic-brand {
-    color: #aaa;
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-align: center;
-    margin-top: 4px;
+.mic-label {
+    position: absolute;
+    bottom: 12%;
+    left: 20%;
+    width: 60%;
+    height: 3px;
+    background: #555;
+    border-radius: 3px;
 }
 
-/* ЧАТ */
+/* Витий кабель */
+.cable {
+    position: absolute;
+    left: 34%;
+    top: 57%;
+    width: 8%;
+    height: 28%;
+    z-index: 3;
+    border-left: 4px solid #101212;
+    border-radius: 50%;
+    transform: rotate(-12deg);
+}
 
+.cable::after {
+    content: "";
+    position: absolute;
+    left: -9px;
+    top: 0;
+    width: 18px;
+    height: 100%;
+    background: repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 3px,
+        #080909 4px,
+        #777 5px,
+        #101212 7px
+    );
+    border-radius: 50%;
+    transform: rotate(8deg);
+}
+
+/* Інтерфейс чату */
 .chat {
-    width: 100%;
-    max-width: 390px;
     display: none;
-    flex-direction: column;
-    gap: 12px;
-    animation: appear 0.3s ease;
+    margin-top: 12px;
+    background: #242424;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 12px;
 }
 
-.chat.visible {
-    display: flex;
-}
-
-.chat-title {
-    color: #ff9b32;
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-align: center;
+.chat.open {
+    display: block;
 }
 
 .messages {
-    min-height: 90px;
-    max-height: 260px;
+    min-height: 35px;
+    max-height: 180px;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
 }
 
 .message {
-    padding: 10px 13px;
+    padding: 7px 10px;
+    background: #343434;
     border-radius: 8px;
-    background: #292929;
-    font-size: 14px;
+    margin-bottom: 6px;
     overflow-wrap: anywhere;
 }
 
-.message.mine {
-    background: #393027;
-    border-left: 3px solid #ff9b32;
-    align-self: flex-end;
-    max-width: 85%;
-}
-
-.input-row {
+.chat-form {
     display: flex;
     gap: 8px;
 }
 
-.input-row input {
-    flex: 1;
+.chat-form input {
     min-width: 0;
-    padding: 13px;
-    background: #292929;
+    flex: 1;
+    padding: 12px;
+    background: #151515;
+    color: white;
     border: 1px solid #555;
     border-radius: 7px;
-    color: white;
     outline: none;
-    font-size: 14px;
 }
 
-.input-row input:focus {
-    border-color: #ff9b32;
-}
-
-.input-row button {
-    padding: 0 17px;
-    border: none;
-    border-radius: 7px;
-    background: #d77a24;
+.chat-form button {
+    background: #d27b28;
     color: white;
+    border: 0;
+    border-radius: 7px;
+    padding: 0 17px;
     font-weight: bold;
     cursor: pointer;
 }
 
 .hint {
-    color: #777;
-    font-size: 11px;
     text-align: center;
-}
-
-@keyframes appear {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    color: #aaa;
+    font-size: 12px;
+    margin-top: 9px;
 }
 </style>
 </head>
 
 <body>
+<div class="app">
 
-<header>
-    <h1>CONTINERA</h1>
-    <p>CB RADIO SYSTEM</p>
-</header>
+    <div class="scene" id="scene">
 
-<!-- РАЦІЯ І МІКРОФОН -->
+        <div class="cabin"></div>
+        <div class="windshield"></div>
+        <div class="outside"></div>
+        <div class="roof"></div>
+        <div class="dash"></div>
 
-<div class="radio-stage" id="radioStage">
+        <div class="mount"></div>
 
-    <div class="radio-container">
         <div class="radio">
+            <div class="radio-face">
 
-            <div class="radio-top">
-                <span>CB TRANSCEIVER</span>
-                <span class="brand">CONTINERA</span>
-            </div>
+                <div class="screw s1"></div>
+                <div class="screw s2"></div>
+                <div class="screw s3"></div>
+                <div class="screw s4"></div>
 
-            <div class="radio-panel">
+                <div class="brand">CONTINERA CB</div>
 
-                <div class="knob"></div>
+                <div class="knob left"></div>
+                <div class="knob right"></div>
 
                 <div class="display">
-                    <div class="channel">19</div>
-                    <div class="display-label">CHANNEL</div>
+                    <span class="digits">88</span>
+                    <div class="signal">
+                        <i></i><i></i><i></i><i></i><i></i>
+                    </div>
                 </div>
 
-                <div class="knob"></div>
+                <div class="channel">CH 19</div>
+
+                <div class="small-button b1"></div>
+                <div class="small-button b2"></div>
+                <div class="small-button b3"></div>
+                <div class="small-button b4"></div>
+                <div class="small-button b5"></div>
+                <div class="small-button b6"></div>
 
             </div>
-
-            <div class="radio-bottom">
-
-                <div class="radio-buttons">
-                    <div class="radio-button"></div>
-                    <div class="radio-button"></div>
-                    <div class="radio-button"></div>
-                </div>
-
-                <div class="radio-speaker"></div>
-
-            </div>
-
-            <div class="radio-footer">
-                AM • FM • 27 MHz
-            </div>
-
         </div>
-    </div>
 
-    <!-- КАБЕЛЬ МІКРОФОНА -->
+        <div class="cable"></div>
 
-    <div class="mic-cable"></div>
-
-    <!-- МІКРОФОН: НАТИСКАТИ СЮДИ -->
-
-    <button class="microphone" id="microphone"
-            aria-label="Відкрити або закрити CB чат">
-
-        <div class="mic-top"></div>
-        <div class="mic-speaker"></div>
-        <div class="mic-button"></div>
-        <div class="mic-brand">CB</div>
-
-    </button>
-
-</div>
-
-<!-- ЧАТ -->
-
-<div class="chat" id="chat">
-
-    <div class="chat-title">
-        CHANNEL 19 — CB CONNECTION
-    </div>
-
-    <div class="messages" id="messages"></div>
-
-    <div class="input-row">
-
-        <input
-            type="text"
-            id="messageInput"
-            placeholder="Написати повідомлення..."
-            autocomplete="off"
-        >
-
-        <button id="sendButton">➤</button>
+        <div class="microphone" id="microphone" title="Відкрити рацію">
+            <div class="mic-top"></div>
+            <div class="mic-grille"></div>
+            <div class="mic-button"></div>
+            <div class="mic-label"></div>
+        </div>
 
     </div>
 
-    <div class="hint">
-        Натисни на мікрофон, щоб закрити чат
+    <div class="hint">Натисни на підвісний мікрофон, щоб відкрити чат</div>
+
+    <div class="chat" id="chat">
+        <div class="messages" id="messages"></div>
+        <form class="chat-form" id="chatForm">
+            <input id="messageInput" placeholder="Повідомлення на 19 канал..." autocomplete="off">
+            <button type="submit">➤</button>
+        </form>
     </div>
 
 </div>
 
 <script>
 const microphone = document.getElementById("microphone");
-const radioStage = document.getElementById("radioStage");
 const chat = document.getElementById("chat");
-const input = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
+const scene = document.getElementById("scene");
 const messages = document.getElementById("messages");
+const input = document.getElementById("messageInput");
+const form = document.getElementById("chatForm");
 
 let chatOpen = false;
 
-// ВІДКРИТТЯ І ЗАКРИТТЯ ЧАТУ
-
 microphone.addEventListener("click", () => {
-
     chatOpen = !chatOpen;
 
-    radioStage.classList.toggle("open", chatOpen);
-    chat.classList.toggle("visible", chatOpen);
+    chat.classList.toggle("open", chatOpen);
+    scene.style.transform = chatOpen ? "scale(1.025)" : "scale(1)";
 
     if (chatOpen) {
         input.focus();
@@ -517,50 +499,23 @@ microphone.addEventListener("click", () => {
         messages.innerHTML = "";
         input.value = "";
     }
-
 });
 
-// НАДСИЛАННЯ ПОВІДОМЛЕННЯ
-
-function sendMessage() {
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
 
     const text = input.value.trim();
-
     if (!text) return;
 
     const message = document.createElement("div");
-
-    message.className = "message mine";
-    message.textContent = text;
+    message.className = "message";
+    message.textContent = "Ти: " + text;
 
     messages.appendChild(message);
+    messages.scrollTop = messages.scrollHeight;
 
     input.value = "";
-
-    messages.scrollTop = messages.scrollHeight;
-}
-
-sendButton.addEventListener("click", sendMessage);
-
-input.addEventListener("keydown", (event) => {
-
-    if (event.key === "Enter") {
-        sendMessage();
-    }
-
 });
-
-// SERVICE WORKER
-
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener("load", () => {
-
-        navigator.serviceWorker.register("./sw.js");
-
-    });
-
-}
 </script>
 
 </body>
