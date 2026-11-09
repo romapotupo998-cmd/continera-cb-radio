@@ -29,7 +29,7 @@ body {
 header {
     width: 100%;
     text-align: center;
-    margin-bottom: 55px;
+    margin-bottom: 45px;
 }
 
 header h1 {
@@ -44,19 +44,29 @@ header p {
     letter-spacing: 2px;
 }
 
-/* РАЦІЯ */
+/* РАЦІЯ ТА МІКРОФОН */
 
-.radio-container {
+.radio-stage {
     width: 100%;
     max-width: 390px;
-    display: flex;
-    justify-content: center;
+    height: 245px;
+    position: relative;
     transition: transform 0.35s ease;
 }
 
-.radio-container.open {
+.radio-stage.open {
     transform: scale(1.08);
-    margin-bottom: 30px;
+    margin-bottom: 25px;
+}
+
+/* КОРПУС РАЦІЇ */
+
+.radio-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(100% - 42px);
+    transition: transform 0.35s ease;
 }
 
 .radio {
@@ -68,7 +78,6 @@ header p {
     box-shadow:
         0 8px 20px #000,
         inset 0 1px 3px #aaa;
-    cursor: pointer;
     user-select: none;
 }
 
@@ -77,26 +86,26 @@ header p {
     justify-content: space-between;
     align-items: center;
     color: #ccc;
-    font-size: 11px;
-    letter-spacing: 2px;
+    font-size: 10px;
+    letter-spacing: 1px;
     margin-bottom: 12px;
 }
 
 .brand {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 13px;
     color: #eee;
 }
 
 .radio-panel {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 9px;
 }
 
 .knob {
-    width: 53px;
-    height: 53px;
+    width: 43px;
+    height: 43px;
     flex-shrink: 0;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #888, #292929 55%, #080808);
@@ -109,17 +118,17 @@ header p {
     content: "";
     position: absolute;
     width: 3px;
-    height: 14px;
+    height: 12px;
     background: #ddd;
-    top: 4px;
-    left: 22px;
+    top: 3px;
+    left: 17px;
     border-radius: 5px;
 }
 
 .display {
     flex: 1;
     min-width: 0;
-    height: 75px;
+    height: 70px;
     background: #171b13;
     border: 4px solid #101010;
     border-radius: 5px;
@@ -133,14 +142,14 @@ header p {
 }
 
 .channel {
-    font-size: 35px;
+    font-size: 34px;
     font-family: monospace;
     font-weight: bold;
     line-height: 1;
 }
 
 .display-label {
-    font-size: 9px;
+    font-size: 8px;
     letter-spacing: 3px;
     margin-top: 5px;
 }
@@ -154,11 +163,11 @@ header p {
 
 .radio-buttons {
     display: flex;
-    gap: 7px;
+    gap: 6px;
 }
 
 .radio-button {
-    width: 27px;
+    width: 24px;
     height: 12px;
     background: linear-gradient(#888, #333);
     border: 1px solid #111;
@@ -166,8 +175,8 @@ header p {
 }
 
 .radio-speaker {
-    width: 90px;
-    height: 24px;
+    width: 75px;
+    height: 22px;
     background: repeating-linear-gradient(
         0deg,
         #111 0px,
@@ -181,9 +190,112 @@ header p {
 .radio-footer {
     text-align: center;
     color: #aaa;
-    font-size: 9px;
+    font-size: 8px;
     letter-spacing: 3px;
     margin-top: 12px;
+}
+
+/* ВИТИЙ КАБЕЛЬ */
+
+.mic-cable {
+    position: absolute;
+    z-index: 1;
+    left: 34px;
+    top: 83px;
+    width: 19px;
+    height: 125px;
+
+    background:
+        repeating-linear-gradient(
+            135deg,
+            transparent 0px,
+            transparent 4px,
+            #111 5px,
+            #777 7px,
+            #222 9px
+        );
+
+    border-left: 2px solid #111;
+    border-right: 2px solid #555;
+    border-radius: 10px;
+    transform: rotate(3deg);
+}
+
+/* МІКРОФОН */
+
+.microphone {
+    position: absolute;
+    z-index: 5;
+    left: 0;
+    top: 65px;
+
+    width: 82px;
+    height: 155px;
+
+    border: 3px solid #555;
+    border-radius: 20px 20px 26px 26px;
+
+    background: linear-gradient(
+        110deg,
+        #444 0%,
+        #171717 35%,
+        #080808 70%,
+        #333 100%
+    );
+
+    box-shadow:
+        4px 7px 12px #000,
+        inset 1px 1px 4px #888;
+
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s ease;
+}
+
+.microphone:active {
+    transform: scale(0.95);
+}
+
+.mic-top {
+    width: 58px;
+    height: 15px;
+    margin: 5px auto 0;
+    background: linear-gradient(#555, #111);
+    border-radius: 10px 10px 3px 3px;
+}
+
+.mic-speaker {
+    width: 48px;
+    height: 52px;
+    margin: 5px auto;
+    border-radius: 7px;
+
+    background:
+        radial-gradient(circle, #999 1px, transparent 1.5px);
+
+    background-size: 4px 4px;
+    background-color: #292929;
+
+    border: 2px solid #111;
+    box-shadow: inset 0 0 8px #000;
+}
+
+.mic-button {
+    width: 12px;
+    height: 30px;
+    background: linear-gradient(90deg, #888, #333, #777);
+    border: 2px solid #111;
+    border-radius: 5px;
+    margin: 4px auto;
+    box-shadow: 0 2px 3px #000;
+}
+
+.mic-brand {
+    color: #aaa;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 4px;
 }
 
 /* ЧАТ */
@@ -260,6 +372,7 @@ header p {
     background: #d77a24;
     color: white;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .hint {
@@ -288,43 +401,69 @@ header p {
     <p>CB RADIO SYSTEM</p>
 </header>
 
-<div class="radio-container" id="radioContainer">
-    <div class="radio" id="radio">
+<!-- РАЦІЯ І МІКРОФОН -->
 
-        <div class="radio-top">
-            <span>CB TRANSCEIVER</span>
-            <span class="brand">CONTINERA</span>
-        </div>
+<div class="radio-stage" id="radioStage">
 
-        <div class="radio-panel">
+    <div class="radio-container">
+        <div class="radio">
 
-            <div class="knob"></div>
-
-            <div class="display">
-                <div class="channel">19</div>
-                <div class="display-label">CHANNEL</div>
+            <div class="radio-top">
+                <span>CB TRANSCEIVER</span>
+                <span class="brand">CONTINERA</span>
             </div>
 
-            <div class="knob"></div>
+            <div class="radio-panel">
 
-        </div>
+                <div class="knob"></div>
 
-        <div class="radio-bottom">
-            <div class="radio-buttons">
-                <div class="radio-button"></div>
-                <div class="radio-button"></div>
-                <div class="radio-button"></div>
+                <div class="display">
+                    <div class="channel">19</div>
+                    <div class="display-label">CHANNEL</div>
+                </div>
+
+                <div class="knob"></div>
+
             </div>
 
-            <div class="radio-speaker"></div>
-        </div>
+            <div class="radio-bottom">
 
-        <div class="radio-footer">
-            AM • FM • 27 MHz
-        </div>
+                <div class="radio-buttons">
+                    <div class="radio-button"></div>
+                    <div class="radio-button"></div>
+                    <div class="radio-button"></div>
+                </div>
 
+                <div class="radio-speaker"></div>
+
+            </div>
+
+            <div class="radio-footer">
+                AM • FM • 27 MHz
+            </div>
+
+        </div>
     </div>
+
+    <!-- КАБЕЛЬ МІКРОФОНА -->
+
+    <div class="mic-cable"></div>
+
+    <!-- МІКРОФОН: НАТИСКАТИ СЮДИ -->
+
+    <button class="microphone" id="microphone"
+            aria-label="Відкрити або закрити CB чат">
+
+        <div class="mic-top"></div>
+        <div class="mic-speaker"></div>
+        <div class="mic-button"></div>
+        <div class="mic-brand">CB</div>
+
+    </button>
+
 </div>
+
+<!-- ЧАТ -->
 
 <div class="chat" id="chat">
 
@@ -335,24 +474,27 @@ header p {
     <div class="messages" id="messages"></div>
 
     <div class="input-row">
+
         <input
             type="text"
             id="messageInput"
             placeholder="Написати повідомлення..."
             autocomplete="off"
         >
+
         <button id="sendButton">➤</button>
+
     </div>
 
     <div class="hint">
-        Натисни на рацію, щоб закрити чат
+        Натисни на мікрофон, щоб закрити чат
     </div>
 
 </div>
 
 <script>
-const radio = document.getElementById("radio");
-const radioContainer = document.getElementById("radioContainer");
+const microphone = document.getElementById("microphone");
+const radioStage = document.getElementById("radioStage");
 const chat = document.getElementById("chat");
 const input = document.getElementById("messageInput");
 const sendButton = document.getElementById("sendButton");
@@ -360,10 +502,13 @@ const messages = document.getElementById("messages");
 
 let chatOpen = false;
 
-radio.addEventListener("click", () => {
+// ВІДКРИТТЯ І ЗАКРИТТЯ ЧАТУ
+
+microphone.addEventListener("click", () => {
+
     chatOpen = !chatOpen;
 
-    radioContainer.classList.toggle("open", chatOpen);
+    radioStage.classList.toggle("open", chatOpen);
     chat.classList.toggle("visible", chatOpen);
 
     if (chatOpen) {
@@ -372,38 +517,51 @@ radio.addEventListener("click", () => {
         messages.innerHTML = "";
         input.value = "";
     }
+
 });
 
+// НАДСИЛАННЯ ПОВІДОМЛЕННЯ
+
 function sendMessage() {
+
     const text = input.value.trim();
 
     if (!text) return;
 
     const message = document.createElement("div");
+
     message.className = "message mine";
     message.textContent = text;
 
     messages.appendChild(message);
 
     input.value = "";
+
     messages.scrollTop = messages.scrollHeight;
 }
 
 sendButton.addEventListener("click", sendMessage);
 
 input.addEventListener("keydown", (event) => {
+
     if (event.key === "Enter") {
         sendMessage();
     }
+
 });
 
+// SERVICE WORKER
+
 if ("serviceWorker" in navigator) {
+
     window.addEventListener("load", () => {
+
         navigator.serviceWorker.register("./sw.js");
+
     });
+
 }
 </script>
 
 </body>
-  </html>
-  
+</html>
