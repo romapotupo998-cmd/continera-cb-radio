@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#171717">
+<title>Continera CB Radio</title>
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #171717;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px 15px;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 55px;
+}
+
+header h1 {
+    font-size: 25px;
+    letter-spacing: 3px;
+    margin: 0;
+}
+
+header p {
+    color: #888;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+/* РАЦІЯ */
+
+.radio-container {
+    width: 100%;
+    max-width: 390px;
+    display: flex;
+    justify-content: center;
+    transition: transform 0.35s ease;
+}
+
+.radio-container.open {
+    transform: scale(1.08);
+    margin-bottom: 30px;
+}
+
+.radio {
+    width: 100%;
+    background: linear-gradient(145deg, #444, #171717 35%, #292929);
+    border: 3px solid #777;
+    border-radius: 12px;
+    padding: 13px;
+    box-shadow:
+        0 8px 20px #000,
+        inset 0 1px 3px #aaa;
+    cursor: pointer;
+    user-select: none;
+}
+
+.radio-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ccc;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.brand {
+    font-weight: bold;
+    font-size: 15px;
+    color: #eee;
+}
+
+.radio-panel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.knob {
+    width: 53px;
+    height: 53px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #888, #292929 55%, #080808);
+    border: 3px solid #111;
+    box-shadow: 0 2px 5px #000;
+    position: relative;
+}
+
+.knob::after {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 14px;
+    background: #ddd;
+    top: 4px;
+    left: 22px;
+    border-radius: 5px;
+}
+
+.display {
+    flex: 1;
+    min-width: 0;
+    height: 75px;
+    background: #171b13;
+    border: 4px solid #101010;
+    border-radius: 5px;
+    box-shadow: inset 0 0 12px #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ff9b32;
+    text-shadow: 0 0 8px #ff7b00;
+}
+
+.channel {
+    font-size: 35px;
+    font-family: monospace;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.display-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    margin-top: 5px;
+}
+
+.radio-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 13px;
+}
+
+.radio-buttons {
+    display: flex;
+    gap: 7px;
+}
+
+.radio-button {
+    width: 27px;
+    height: 12px;
+    background: linear-gradient(#888, #333);
+    border: 1px solid #111;
+    border-radius: 3px;
+}
+
+.radio-speaker {
+    width: 90px;
+    height: 24px;
+    background: repeating-linear-gradient(
+        0deg,
+        #111 0px,
+        #111 2px,
+        #555 3px,
+        #222 4px
+    );
+    border-radius: 4px;
+}
+
+.radio-footer {
+    text-align: center;
+    color: #aaa;
+    font-size: 9px;
+    letter-spacing: 3px;
+    margin-top: 12px;
+}
+
+/* ЧАТ */
+
+.chat {
+    width: 100%;
+    max-width: 390px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    animation: appear 0.3s ease;
+}
+
+.chat.visible {
+    display: flex;
+}
+
+.chat-title {
+    color: #ff9b32;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.messages {
+    min-height: 90px;
+    max-height: 260px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.message {
+    padding: 10px 13px;
+    border-radius: 8px;
+    background: #292929;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.message.mine {
+    background: #393027;
+    border-left: 3px solid #ff9b32;
+    align-self: flex-end;
+    max-width: 85%;
+}
+
+.input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.input-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    background: #292929;
+    border: 1px solid #555;
+    border-radius: 7px;
+    color: white;
+    outline: none;
+    font-size: 14px;
+}
+
+.input-row input:focus {
+    border-color: #ff9b32;
+}
+
+.input-row button {
+    padding: 0 17px;
+    border: none;
+    border-radius: 7px;
+    background: #d77a24;
+    color: white;
+    font-weight: bold;
+}
+
+.hint {
+    color: #777;
+    font-size: 11px;
+    text-align: center;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>CONTINERA</h1>
+    <p>CB RADIO SYSTEM</p>
+</header>
+
+<div class="radio-container" id="radioContainer">
+    <div class="radio" id="radio">
+
+        <div class="radio-top">
+            <span>CB TRANSCEIVER</span>
+            <span class="brand">CONTINERA</span>
+        </div>
+
+        <div class="radio-panel">
+
+            <div class="knob"></div>
+
+            <div class="display">
+                <div class="channel">19</div>
+                <div class="display-label">CHANNEL</div>
+            </div>
+
+            <div class="knob"></div>
+
+        </div>
+
+        <div class="radio-bottom">
+            <div class="radio-buttons">
+                <div class="radio-button"></div>
+                <div class="radio-button"></div>
+                <div class="radio-button"></div>
+            </div>
+
+            <div class="radio-speaker"></div>
+        </div>
+
+        <div class="radio-footer">
+            AM • FM • 27 MHz
+        </div>
+
+    </div>
+</div>
+
+<div class="chat" id="chat">
+
+    <div class="chat-title">
+        CHANNEL 19 — CB CONNECTION
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="input-row">
+        <input
+            type="text"
+            id="messageInput"
+            placeholder="Написати повідомлення..."
+            autocomplete="off"
+        >
+        <button id="sendButton">➤</button>
+    </div>
+
+    <div class="hint">
+        Натисни на рацію, щоб закрити чат
+    </div>
+
+</div>
+
+<script>
+const radio = document.getElementById("radio");
+const radioContainer = document.getElementById("radioContainer");
+const chat = document.getElementById("chat");
+const input = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+const messages = document.getElementById("messages");
+
+let chatOpen = false;
+
+radio.addEventListener("click", () => {
+    chatOpen = !chatOpen;
+
+    radioContainer.classList.toggle("open", chatOpen);
+    chat.classList.toggle("visible", chatOpen);
+
+    if (chatOpen) {
+        input.focus();
+    } else {
+        messages.innerHTML = "";
+        input.value = "";
+    }
+});
+
+function sendMessage() {
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    const message = document.createElement("div");
+    message.className = "message mine";
+    message.textContent = text;
+
+    messages.appendChild(message);
+
+    input.value = "";
+    messages.scrollTop = messages.scrollHeight;
+}
+
+sendButton.addEventListener("click", sendMessage);
+
+input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+});
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js");
+    });
+}
+</script>
+
+</body>
+  </html>
+  
