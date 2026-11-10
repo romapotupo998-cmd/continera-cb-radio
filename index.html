@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Uniden Bearcat 980SSB</title>
+    <title>Uniden Bearcat 980SSB - Responsive Radio</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
         }
 
         body {
-            background-color: #0d0e12;
+            background-color: #0b0c0e;
             font-family: 'Segoe UI', Arial, sans-serif;
             color: #fff;
             display: flex;
@@ -32,50 +32,50 @@
             align-items: center;
             gap: 15px;
             width: 100%;
-            max-width: 600px;
+            max-width: 560px;
         }
 
-        /* КОРПУС РАЦІЇ */
+        /* КОРПУС РАЦІЇ З ФІКСОВАНИМ СПІВВІДНОШЕННЯМ СТОРІН */
         .radio-frame {
             position: relative;
             width: 100%;
-            height: 220px;
+            aspect-ratio: 540 / 210;
             background: #141619;
             border-radius: 8px;
-            border: 3px solid #3a3f47;
+            border: 2px solid #3a3f47;
             box-shadow: 0 15px 35px rgba(0,0,0,0.85);
-            display: flex;
-            padding: 6px;
+            padding: 1.2%;
             user-select: none;
-            overflow: hidden; /* Запобігає вилазанню елементів */
+            box-sizing: border-box;
         }
 
         .radio-face {
             width: 100%;
             height: 100%;
             background: radial-gradient(circle at center, #1b1d22 0%, #0f1013 100%);
-            border: 2px solid #5a606a;
+            border: 1.5px solid #5a606a;
             border-radius: 5px;
             position: relative;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 14% 1fr 15%;
             align-items: center;
-            padding: 6px 8px;
+            padding: 1% 2%;
+            box-sizing: border-box;
         }
 
         .screw {
             position: absolute;
-            width: 6px;
-            height: 6px;
+            width: 1.5%;
+            aspect-ratio: 1;
             background: #444;
             border-radius: 50%;
             border: 1px solid #777;
             z-index: 5;
         }
-        .screw.top-left { top: 3px; left: 3px; }
-        .screw.top-right { top: 3px; right: 3px; }
-        .screw.bottom-left { bottom: 3px; left: 3px; }
-        .screw.bottom-right { bottom: 3px; right: 3px; }
+        .screw.top-left { top: 2%; left: 1%; }
+        .screw.top-right { top: 2%; right: 1%; }
+        .screw.bottom-left { bottom: 2%; left: 1%; }
+        .screw.bottom-right { bottom: 2%; right: 1%; }
 
         /* ЛІВА ПАНЕЛЬ */
         .controls-left {
@@ -83,83 +83,81 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            height: 100%;
-            width: 65px;
-            flex-shrink: 0;
+            height: 95%;
             z-index: 2;
         }
 
         .brand-logo {
             font-weight: 800;
-            font-size: 13px;
+            font-size: clamp(8px, 2.2vw, 13px);
             color: #d8dde6;
             letter-spacing: 0.5px;
         }
 
         .dual-knob-container {
             position: relative;
-            width: 44px;
-            height: 44px;
+            width: 60%;
+            aspect-ratio: 1;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .knob-outer-ring {
             position: absolute;
-            width: 44px;
-            height: 44px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            border: 2.5px solid #ff7700;
-            box-shadow: 0 0 6px rgba(255, 119, 0, 0.7);
+            border: 2px solid #ff7700;
+            box-shadow: 0 0 5px rgba(255, 119, 0, 0.7);
         }
         .knob-base {
-            width: 36px;
-            height: 36px;
+            width: 80%;
+            height: 80%;
             background: radial-gradient(circle, #3a3a3a 0%, #151515 80%);
             border-radius: 50%;
-            border: 2px solid #555;
+            border: 1.5px solid #555;
             position: relative;
         }
         .knob-notch {
             position: absolute;
-            top: 3px;
+            top: 10%;
             left: 50%;
             transform: translateX(-50%);
-            width: 2px;
-            height: 10px;
+            width: 10%;
+            height: 35%;
             background-color: #fff;
             border-radius: 1px;
         }
 
         .knob-sub {
-            width: 28px;
-            height: 28px;
+            width: 45%;
+            aspect-ratio: 1;
             background: radial-gradient(circle, #2a2a2a 0%, #111 100%);
             border-radius: 50%;
             border: 1px solid #666;
         }
 
         .knob-label {
-            font-size: 6.5px;
+            font-size: clamp(5px, 1.4vw, 8px);
             color: #aaa;
             font-family: monospace;
             text-align: center;
+            white-space: nowrap;
         }
 
         /* ЦЕНТРАЛЬНИЙ ДИСПЛЕЙ */
         .display-center {
-            flex-grow: 1;
-            height: 100%;
+            height: 95%;
             background-color: #050607;
-            border: 2px solid #2d323b;
+            border: 1.5px solid #2d323b;
             border-radius: 4px;
-            margin: 0 6px;
-            padding: 5px 8px;
+            margin: 0 2%;
+            padding: 2% 3%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: inset 0 0 15px rgba(255, 120, 0, 0.15);
-            min-width: 0; /* Для коректного стискання */
+            box-shadow: inset 0 0 12px rgba(255, 120, 0, 0.15);
+            min-width: 0;
         }
 
         .disp-top-bar {
@@ -168,7 +166,7 @@
             align-items: center;
         }
         .bearcat-title {
-            font-size: 10px;
+            font-size: clamp(7px, 1.8vw, 10px);
             color: #ff9d00;
             font-weight: bold;
         }
@@ -182,7 +180,7 @@
         .signal-meter {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
         }
         .meter-bars-row {
             display: flex;
@@ -190,85 +188,83 @@
             gap: 2px;
         }
         .m-bar {
-            width: 5px;
+            width: clamp(2px, 0.9vw, 5px);
             background-color: #2b1800;
             border-radius: 1px;
         }
         .m-bar.active {
             background-color: #ff8800;
-            box-shadow: 0 0 4px rgba(255, 136, 0, 0.8);
+            box-shadow: 0 0 3px rgba(255, 136, 0, 0.8);
         }
-        .m-bar:nth-child(1) { height: 5px; }
-        .m-bar:nth-child(2) { height: 8px; }
-        .m-bar:nth-child(3) { height: 11px; }
-        .m-bar:nth-child(4) { height: 14px; }
-        .m-bar:nth-child(5) { height: 17px; }
-        .m-bar:nth-child(6) { height: 20px; }
-        .m-bar:nth-child(7) { height: 23px; }
-        .m-bar:nth-child(8) { height: 26px; }
+        .m-bar:nth-child(1) { height: 4px; }
+        .m-bar:nth-child(2) { height: 7px; }
+        .m-bar:nth-child(3) { height: 10px; }
+        .m-bar:nth-child(4) { height: 13px; }
+        .m-bar:nth-child(5) { height: 16px; }
+        .m-bar:nth-child(6) { height: 19px; }
+        .m-bar:nth-child(7) { height: 22px; }
+        .m-bar:nth-child(8) { height: 25px; }
 
         .meter-subtext {
-            font-size: 7px;
+            font-size: clamp(5px, 1.3vw, 7px);
             color: #ff8800;
             font-family: monospace;
             display: flex;
-            gap: 6px;
+            gap: 4px;
         }
 
         .channel-display {
             font-family: 'Courier New', monospace;
-            font-size: 52px;
+            font-size: clamp(26px, 8vw, 48px);
             font-weight: 900;
             color: #ff8800;
-            text-shadow: 0 0 10px rgba(255, 136, 0, 0.8);
-            line-height: 44px;
+            text-shadow: 0 0 8px rgba(255, 136, 0, 0.8);
+            line-height: 0.9;
         }
 
         .disp-status-row {
             display: flex;
-            gap: 5px;
-            font-size: 7px;
+            gap: 4px;
+            font-size: clamp(5px, 1.3vw, 7px);
             font-family: monospace;
             color: #ff9d00;
         }
         .status-tag { opacity: 0.3; }
-        .status-tag.active { opacity: 1; text-shadow: 0 0 3px #ff9d00; }
+        .status-tag.active { opacity: 1; text-shadow: 0 0 2px #ff9d00; }
 
         .bottom-buttons-row {
             display: flex;
             justify-content: space-between;
             border-top: 1px solid #222;
-            padding-top: 3px;
-            gap: 2px;
+            padding-top: 2px;
+            gap: 1px;
         }
         .btn-cap {
             background: linear-gradient(to bottom, #2b2e33, #18191c);
             border: 1px solid #444;
             border-radius: 2px;
             color: #ccc;
-            font-size: 6px;
+            font-size: clamp(4px, 1.1vw, 6px);
             font-weight: bold;
-            padding: 2px 1px;
+            padding: 1px 0;
             text-align: center;
             flex-grow: 1;
         }
 
-        /* ПРАВА ПАНЕЛЬ (Виправлена) */
+        /* ПРАВА ПАНЕЛЬ */
         .controls-right {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            height: 100%;
-            width: 70px; /* Звужено, щоб не вилазило */
-            flex-shrink: 0;
+            height: 95%;
             z-index: 2;
         }
 
         .channel-encoder {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: 55%;
+            aspect-ratio: 1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -281,7 +277,7 @@
             width: 100%;
         }
         .side-btn-label {
-            font-size: 6px;
+            font-size: clamp(4.5px, 1.2vw, 6.5px);
             color: #bbb;
             font-family: sans-serif;
             font-weight: bold;
@@ -289,13 +285,15 @@
             background: rgba(255,255,255,0.05);
             padding: 1px 0;
             border-radius: 2px;
+            white-space: nowrap;
         }
 
-        /* МІКРОФОН */
+        /* МІКРОФОН ЗЛІВА */
         .mic-wrapper {
             position: absolute;
-            left: -35px;
-            bottom: -15px;
+            left: -6%;
+            bottom: -5%;
+            width: 11%;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 15;
@@ -303,71 +301,72 @@
         }
 
         .mic-body {
-            width: 50px;
-            height: 95px;
+            width: 100%;
+            aspect-ratio: 1 / 2;
             background: linear-gradient(145deg, #2a2d32 0%, #111215 100%);
             border: 2px solid #4a5059;
-            border-radius: 22px 22px 10px 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+            border-radius: 12px 12px 6px 6px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.7);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 10px;
+            padding-top: 15%;
         }
 
         .mic-grille-mesh {
-            width: 32px;
-            height: 38px;
+            width: 65%;
+            height: 40%;
             background: repeating-linear-gradient(
                 0deg,
                 #0a0b0c,
-                #0a0b0c 3px,
-                #22252a 3px,
-                #22252a 6px
+                #0a0b0c 2px,
+                #22252a 2px,
+                #22252a 4px
             );
-            border-radius: 6px;
+            border-radius: 4px;
             border: 1px solid #444;
         }
 
         .mic-ptt-btn {
-            width: 26px;
-            height: 24px;
+            width: 50%;
+            height: 25%;
             background: linear-gradient(to bottom, #222, #111);
-            border: 1.5px solid #555;
+            border: 1px solid #555;
             border-radius: 3px;
-            margin-top: 8px;
+            margin-top: 15%;
         }
 
+        /* ЗБІЛЬШЕННЯ МІКРОФОНА */
         .mic-wrapper.expanded {
-            transform: scale(1.35) translate(35px, -25px);
+            transform: scale(1.6) translate(40%, -20%);
         }
         .mic-wrapper.expanded .mic-body {
             border-color: #ff8800;
-            box-shadow: 0 10px 30px rgba(255, 136, 0, 0.45);
+            box-shadow: 0 8px 25px rgba(255, 136, 0, 0.5);
         }
         .mic-wrapper.expanded .mic-ptt-btn {
             background: linear-gradient(to bottom, #ff8800, #cc6600);
             border-color: #ffaa00;
         }
 
-        /* ПАНЕЛЬ ВВЕДЕННЯ */
+        /* ПОЛЕ ВВЕДЕННЯ ПОВІДОМЛЕННЯ */
         .chat-overlay {
             position: absolute;
-            left: 50px;
-            bottom: 15px;
+            left: 12%;
+            bottom: 8%;
             background: #15171c;
             border: 2px solid #ff8800;
-            border-radius: 8px;
-            padding: 8px;
+            border-radius: 6px;
+            padding: 6px;
             display: flex;
             gap: 6px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.85);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.85);
             opacity: 0;
             pointer-events: none;
-            transform: translateY(20px);
+            transform: translateY(15px);
             transition: all 0.3s ease;
             z-index: 30;
-            width: 240px;
+            width: 55%;
         }
 
         .chat-overlay.active {
@@ -382,9 +381,10 @@
             border: 1px solid #3a3f47;
             border-radius: 4px;
             color: #fff;
-            padding: 6px 8px;
-            font-size: 12px;
+            padding: 4px 8px;
+            font-size: clamp(10px, 2.5vw, 13px);
             outline: none;
+            width: 60%;
         }
         .chat-input-field:focus { border-color: #ff8800; }
 
@@ -392,21 +392,21 @@
             background: #ff8800;
             color: #000;
             border: none;
-            padding: 6px 10px;
+            padding: 4px 10px;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 11px;
+            font-size: clamp(10px, 2.3vw, 12px);
             cursor: pointer;
         }
 
-        /* ЖУРНАЛ */
+        /* ЖУРНАЛ ПЕРЕДАЧІ */
         .radio-log {
             width: 100%;
             background: #101216;
-            border: 2px solid #252830;
+            border: 1.5px solid #252830;
             border-radius: 8px;
             padding: 10px;
-            height: 120px;
+            height: 110px;
             overflow-y: auto;
             font-family: monospace;
             font-size: 11px;
@@ -423,6 +423,7 @@
 <body>
 
     <div class="main-wrapper">
+        <!-- КОРПУС UNIDEN 980SSB -->
         <div class="radio-frame">
             <div class="radio-face">
                 <div class="screw top-left"></div>
@@ -431,7 +432,7 @@
                 <div class="screw bottom-right"></div>
 
                 <!-- МІКРОФОН ЗЛІВА -->
-                <div class="mic-wrapper" id="micWrapper">
+                <div class="mic-wrapper" id="micWrapper" title="Торкніться для активації">
                     <div class="mic-body">
                         <div class="mic-grille-mesh"></div>
                         <div class="mic-ptt-btn"></div>
@@ -478,7 +479,7 @@
                             </div>
                             <div class="meter-subtext">
                                 <span>S/RF</span>
-                                <span>-30 dB</span>
+                                <span>+30 dB</span>
                             </div>
                         </div>
 
@@ -504,7 +505,7 @@
                     </div>
                 </div>
 
-                <!-- ПРАВА ПАНЕЛЬ (ВИПРАВЛЕНА) -->
+                <!-- ПРАВА ПАНЕЛЬ -->
                 <div class="controls-right">
                     <div class="channel-encoder">
                         <div class="knob-outer-ring"></div>
@@ -528,7 +529,7 @@
 
         <!-- ЖУРНАЛ -->
         <div class="radio-log" id="radioLog">
-            <div class="log-entry"><span>[Система]:</span> CB-рація Uniden 980SSB готова до роботи. Канал 19 (27.185 MHz).</div>
+            <div class="log-entry"><span>[Система]:</span> CB-рація Uniden 980SSB готова. Канал 19.</div>
         </div>
     </div>
 
