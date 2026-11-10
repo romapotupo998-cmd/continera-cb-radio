@@ -534,94 +534,165 @@
     </div>
 
     <script>
-        const micWrapper = document.getElementById('micWrapper');
-        const chatOverlay = document.getElementById('chatOverlay');
-        const msgInput = document.getElementById('msgInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const radioLog = document.getElementById('radioLog');
+        
+const micWrapper = document.getElementById('micWrapper');
+const chatOverlay = document.getElementById('chatOverlay');
+const msgInput = document.getElementById('msgInput');
+const sendBtn = document.getElementById('sendBtn');
+const radioLog = document.getElementById('radioLog');
 
-        let isMicOpen = false;
+const AI_URL = 'https://continer-cb-ai.roma-potupo-998.workers.dev/';
 
-        micWrapper.addEventListener('click', (e) => {
-            e.stopPropagation();
-            isMicOpen = !isMicOpen;
+let isMicOpen = false;
+let isSending = false;
 
-            if (isMicOpen) {
-                micWrapper.classList.add('expanded');
-                chatOverlay.classList.add('active');
-                msgInput.focus();
-                addLog("Мікрофон знято з тримача. Ефір відкрито.");
-                playBeepSound();
-            } else {
-                closeMic();
-            }
+function addLog(textHtml) {
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    entry.innerHTML = textHtml;
+    radioLog.appendChild(entry);
+    radioLog.scrollTop = radioLog.scrollHeight;
+}
+
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    })[char]);
+}
+
+function playBeepSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1300, ctx.currentTime);
+
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001, ctx.currentTime + 0.14
+        );
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.14);
+    } catch (err) {}
+}
+
+function openMic() {
+    isMicOpen = true;
+    micWrapper.classList.add('expanded');
+    chatOverlay.classList.add('active');
+    msgInput.focus();
+    addLog('Мікрофон знято з тримача. Ефір відкрито.');
+    playBeepSound();
+}
+
+function closeMic() {
+    isMicOpen = false;
+    micWrapper.classList.remove('expanded');
+    chatOverlay.classList.remove('active');
+
+    msgInput.value = '';
+    radioLog.innerHTML =
+        '<div class="log-entry"><span>[Система]:</span> CB-рація готова. Канал 19.</div>';
+}
+
+micWrapper.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    if (isMicOpen) {
+        closeMic();
+    } else {
+        openMic();
+    }
+});
+
+async function transmitMessage() {
+    const text = msgInput.value.trim();
+
+    if (!text || isSending) return;
+
+    isSending = true;
+    sendBtn.disabled = true;
+
+    addLog(`<span>[Ви / 19 Канал]:</span> ${escapeHtml(text)}`);
+
+    msgInput.value = '';
+    playBeepSound();
+
+    addLog('<span>[Вовк-24]:</span> Передаю повідомлення...');
+
+    try {
+        const response = await fetch(AI_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: text
+            })
         });
 
-        function closeMic() {
-            isMicOpen = false;
-            micWrapper.classList.remove('expanded');
-            chatOverlay.classList.remove('active');
-            addLog("Мікрофон повернуто.");
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Помилка сервера');
         }
 
-        function transmitMessage() {
-            const text = msgInput.value.trim();
-            if (text) {
-                addLog(`<span>[Ви / 19 Канал]:</span> ${escapeHtml(text)}`);
-                msgInput.value = '';
-                playBeepSound();
-                closeMic();
-            }
+        const entries = radioLog.querySelectorAll('.log-entry');
+        const lastEntry = entries[entries.length - 1];
+
+        if (lastEntry && lastEntry.textContent.includes('Передаю повідомлення')) {
+            lastEntry.remove();
         }
 
-        sendBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            transmitMessage();
-        });
+        addLog(`<span>[Вовк-24]:</span> ${escapeHtml(data.reply || 'Прийом, повтори.')}`);
+        playBeepSound();
 
-        msgInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                transmitMessage();
-            }
-        });
+    } catch (error) {
+        const entries = radioLog.querySelectorAll('.log-entry');
+        const lastEntry = entries[entries.length - 1];
 
-        document.addEventListener('click', (e) => {
-            if (isMicOpen && !micWrapper.contains(e.target) && !chatOverlay.contains(e.target)) {
-                closeMic();
-            }
-        });
-
-        function addLog(textHtml) {
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            entry.innerHTML = textHtml;
-            radioLog.appendChild(entry);
-            radioLog.scrollTop = radioLog.scrollHeight;
+        if (lastEntry && lastEntry.textContent.includes('Передаю повідомлення')) {
+            lastEntry.remove();
         }
 
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
+        addLog(`<span>[Помилка]:</span> ${escapeHtml(error.message)}`);
+    } finally {
+        isSending = false;
+        sendBtn.disabled = false;
+    }
+}
 
-        function playBeepSound() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
+sendBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    transmitMessage();
+});
 
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1300, ctx.currentTime);
+msgInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        transmitMessage();
+    }
+});
 
-                gain.gain.setValueAtTime(0.08, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.14);
-
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.start();
-                osc.stop(ctx.currentTime + 0.14);
-            } catch (err) {}
-        }
+document.addEventListener('click', (e) => {
+    if (
+        isMicOpen &&
+        !micWrapper.contains(e.target) &&
+        !chatOverlay.contains(e.target)
+    ) {
+        closeMic();
+    }
+});
+        
     </script>
 </body>
 </html>
